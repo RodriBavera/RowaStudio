@@ -1,0 +1,68 @@
+.header-custom {
+  background-color: #F3ECE7;
+  transition: all 0.3s ease;
+  position: sticky !important;
+  top: 0;
+  z-index: 1020; 
+  width: 100%;
+}
+
+/* Cuando el usuario hace scroll */
+.header-custom.scrolled {
+  background-color: #8B6E58; /* color de fondo scrolleado */
+  padding: 0.6rem 0; /* se achica un poco */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* sombra flotante */
+}
+
+/* Marca */
+.header-custom .brand-name {
+  font-weight: 600;
+  font-size: 1.4rem; /* un poco más grande */
+  color: #8B6E58;
+  transition: color 0.3s ease;
+}
+
+.header-custom.scrolled .brand-name {
+  color: #fff;
+}
+
+/* Links */
+.header-custom .nav-link {
+  color: #A8907C;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  font-size: 1.05rem;
+}
+
+.header-custom.scrolled .nav-link {
+  color: #fff;
+}
+
+.header-custom .nav-link:hover {
+  color: #F3ECE7;
+}
+
+/* Logo */
+.logo {
+  width: 130px;
+  height: 80px;
+  transition: height 0.3s ease;
+}
+
+.header-custom.scrolled .logo {
+  height: 50px; /* se reduce un poco al scrollear */
+}
+
+/* Botón hamburguesa */
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler-icon {
+  filter: invert(42%) sepia(11%) saturate(518%) hue-rotate(345deg) brightness(94%) contrast(85%);
+  transition: filter 0.3s ease;
+}
+
+.header-custom.scrolled .navbar-toggler-icon {
+  filter: invert(100%); /* cambia a blanco al scrollear */
+}
