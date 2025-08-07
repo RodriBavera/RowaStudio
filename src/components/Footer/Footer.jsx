@@ -13,7 +13,7 @@ export default function Footer() {
           <div className="footer-text">
             <p className="mb-1">© 2025 Rowa Studio - Todos los derechos reservados</p>
             <p>
-              <a href="https://instagram.com" className="footer-link mx-2">
+              <a href="https://www.instagram.com/rowa.studio_/" className="footer-link mx-2">
                 Instagram
               </a>
               |
@@ -21,6 +21,7 @@ export default function Footer() {
                 Facebook
               </a>
             </p>
+            <p className="mb-0">Dirección: San Martin Oeste</p>
             <p className="mb-0">Teléfono: +54 9 2954 123456</p>
           </div>
         </div>

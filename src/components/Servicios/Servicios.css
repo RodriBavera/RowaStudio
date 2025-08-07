@@ -1,0 +1,250 @@
+/* ===== ESTILOS DEL CARRUSEL DE SERVICIOS ===== */
+
+/* Contenedor principal */
+.servicios-page {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    background: linear-gradient(135deg, #e1c0a5 0%, #f0d5be 100%);
+    border-radius: 0;
+    padding: 30px 0;
+    box-shadow: 0 8px 25px rgba(139, 110, 88, 0.15);
+    position: relative;
+    left: 50%;
+    right: 50%;
+    transform: translateX(-50%);
+}
+
+.servicios-page h2 {
+    color: #8B6E58;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(139, 110, 88, 0.1);
+}
+
+/* Contenedor del carrusel - ancho completo */
+.carousel {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.carousel-inner {
+    width: 100%;
+    padding: 0 20px;
+}
+
+/* Mejoras en las cards */
+.card {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(139, 110, 88, 0.1);
+    background-color: #F3ECE7;
+    height: 100%;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(139, 110, 88, 0.2);
+}
+
+.card img {
+    height: 220px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.card:hover img {
+    transform: scale(1.05);
+}
+
+.card-body {
+    padding: 20px;
+    background-color: #F3ECE7;
+}
+
+.card-title {
+    color: #8B6E58;
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 15px;
+}
+
+.card-text {
+    color: #6b5444;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+/* Botones mejorados */
+.btn-outline-primary {
+    color: #8B6E58;
+    background-color: transparent;
+    border: 2px solid #8B6E58;
+    padding: 10px 25px;
+    border-radius: 25px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.9rem;
+}
+
+.btn-outline-primary:hover {
+    background-color: #8B6E58;
+    border-color: #8B6E58;
+    color: #F3ECE7;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(139, 110, 88, 0.3);
+}
+
+/* Controles del carrusel personalizados */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 50px;
+    height: 50px;
+    background-color: rgba(139, 110, 88, 0.8);
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.carousel-control-prev {
+    left: -25px;
+}
+
+.carousel-control-next {
+    right: -25px;
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: rgba(139, 110, 88, 1);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 20px;
+    height: 20px;
+    background-size: 100%;
+    filter: brightness(0) invert(1);
+}
+
+/* Indicadores del carrusel */
+.carousel-indicators {
+    bottom: -50px;
+}
+
+.carousel-indicators [data-bs-target] {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: rgba(139, 110, 88, 0.3);
+    border: none;
+    margin: 0 5px;
+    transition: all 0.3s ease;
+}
+
+.carousel-indicators .active {
+    background-color: #8B6E58;
+    transform: scale(1.2);
+}
+
+/* Ajuste del carrusel */
+.carousel-item {
+    padding: 20px 0 60px 0;
+}
+
+/* Espaciado entre cards */
+.carousel-inner .col-md-4 {
+    padding: 0 15px;
+}
+
+/* Responsivo: una card por slide en móviles */
+@media (max-width: 768px) {
+    .servicios-page {
+        padding: 20px 10px;
+        border-radius: 0;
+    }
+    
+    .servicios-page h2 {
+        font-size: 2rem;
+        margin-bottom: 30px;
+    }
+    
+    .carousel {
+        padding: 0 50px; /* Espacio para las flechas */
+    }
+    
+    .carousel-inner {
+        padding: 0 10px;
+    }
+    
+    /* Mantener las flechas visibles en móvil */
+    .carousel-control-prev,
+    .carousel-control-next {
+        width: 40px;
+        height: 40px;
+        background-color: rgba(139, 110, 88, 0.9);
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    
+    .carousel-control-prev {
+        left: 10px;
+    }
+    
+    .carousel-control-next {
+        right: 10px;
+    }
+    
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        width: 16px;
+        height: 16px;
+    }
+    
+    /* Opcional: Scroll horizontal como backup */
+    .carousel-inner .row {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: hidden; /* Cambiado de auto a hidden */
+    }
+    
+    .carousel-inner .col-md-4 {
+        flex: 0 0 auto;
+        width: 100%;
+        padding: 0 10px;
+    }
+    
+    .card {
+        margin-bottom: 20px;
+    }
+    
+    .carousel-item {
+        padding: 10px 0 40px 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .carousel-inner .col-md-4 {
+        width: 90%;
+    }
+    
+    .card img {
+        height: 180px;
+    }
+    
+    .card-body {
+        padding: 15px;
+    }
+}
