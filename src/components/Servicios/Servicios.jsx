@@ -24,11 +24,11 @@ export default function Servicios() {
 
   return (
     <div className="servicios-page container py-5">
-      
-      <h3 className="lead text-center mb-5">
+
+      <h2 className="lead text-center mb-5">
         En Rowa Studio brindamos tratamientos diseñados para tu bienestar,
         combinando tecnología de vanguardia con atención personalizada.
-      </h3>
+      </h2>
 
       <div id="carouselServicios" className="carousel slide" data-bs-ride="carousel">
         <div className="carousel-inner">
@@ -36,7 +36,6 @@ export default function Servicios() {
             <div className={`carousel-item ${index === 0 ? "active" : ""}`} key={index}>
               <div className="row justify-content-center">
                 {grupo.map((servicio) => {
-                  // ✅ Usar ruta de public/ directamente
                   const imagenSrc = `/assets/ImgServicios/${servicio.imagen}`;
 
                   return (

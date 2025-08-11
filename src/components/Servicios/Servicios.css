@@ -1,27 +1,5 @@
-/* ===== ESTILOS DEL CARRUSEL DE SERVICIOS ===== */
-
-/* Contenedor principal */
-.servicios-page {
-    width: 100vw;
-    margin-left: calc(-50vw + 50%);
-    margin-right: calc(-50vw + 50%);
-    background: linear-gradient(135deg, #e1c0a5 0%, #f0d5be 100%);
-    border-radius: 0;
-    padding: 30px 0;
-    box-shadow: 0 8px 25px rgba(139, 110, 88, 0.15);
-    position: relative;
-    left: 50%;
-    right: 50%;
-    transform: translateX(-50%);
-}
-
-.servicios-page h2 {
+.lead {
     color: #8B6E58;
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 40px;
-    font-size: 2.5rem;
-    text-shadow: 2px 2px 4px rgba(139, 110, 88, 0.1);
 }
 
 /* Contenedor del carrusel - ancho completo */
@@ -158,12 +136,12 @@
     transform: scale(1.2);
 }
 
-/* Ajuste del carrusel */
+
 .carousel-item {
     padding: 20px 0 60px 0;
 }
 
-/* Espaciado entre cards */
+
 .carousel-inner .col-md-4 {
     padding: 0 15px;
 }
@@ -174,21 +152,21 @@
         padding: 20px 10px;
         border-radius: 0;
     }
-    
+
     .servicios-page h2 {
         font-size: 2rem;
         margin-bottom: 30px;
     }
-    
+
     .carousel {
-        padding: 0 50px; /* Espacio para las flechas */
+        padding: 0 50px;
     }
-    
+
     .carousel-inner {
         padding: 0 10px;
     }
-    
-    /* Mantener las flechas visibles en móvil */
+
+
     .carousel-control-prev,
     .carousel-control-next {
         width: 40px;
@@ -198,38 +176,39 @@
         top: 50%;
         transform: translateY(-50%);
     }
-    
+
     .carousel-control-prev {
         left: 10px;
     }
-    
+
     .carousel-control-next {
         right: 10px;
     }
-    
+
     .carousel-control-prev-icon,
     .carousel-control-next-icon {
         width: 16px;
         height: 16px;
     }
-    
+
     /* Opcional: Scroll horizontal como backup */
     .carousel-inner .row {
         display: flex;
         flex-wrap: nowrap;
-        overflow-x: hidden; /* Cambiado de auto a hidden */
+        overflow-x: hidden;
+        /* Cambiado de auto a hidden */
     }
-    
+
     .carousel-inner .col-md-4 {
         flex: 0 0 auto;
         width: 100%;
         padding: 0 10px;
     }
-    
+
     .card {
         margin-bottom: 20px;
     }
-    
+
     .carousel-item {
         padding: 10px 0 40px 0;
     }
@@ -239,11 +218,11 @@
     .carousel-inner .col-md-4 {
         width: 90%;
     }
-    
+
     .card img {
         height: 180px;
     }
-    
+
     .card-body {
         padding: 15px;
     }

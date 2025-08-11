@@ -20,7 +20,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-      {/* Acá puedes agregar más secciones de la página */}
     </div>
   );
 }

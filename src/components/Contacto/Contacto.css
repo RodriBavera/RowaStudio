@@ -1,0 +1,354 @@
+/* ===== ESTILOS DEL FORMULARIO DE CONTACTO ===== */
+
+.contact-page {
+  background: #ffffff;
+  min-height: 100vh;
+  padding: 60px 0;
+}
+
+.contact-title {
+  color: #8B6E58;
+  font-weight: 700;
+  font-size: 3rem;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 4px rgba(139, 110, 88, 0.1);
+}
+
+.contact-subtitle {
+  color: #6b5444;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* ===== CONTENEDOR DEL FORMULARIO ===== */
+.contact-form-container {
+  background: linear-gradient(145deg, #F3ECE7 0%, #f8f3ee 100%);
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 15px 35px rgba(139, 110, 88, 0.1);
+  border: 1px solid rgba(139, 110, 88, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.contact-form-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(90deg, #8B6E58, #a67c66, #8B6E58);
+}
+
+/* ===== CAMPOS DEL FORMULARIO ===== */
+.form-label {
+  color: #8B6E58;
+  font-weight: 600;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
+.form-control {
+  border: 2px solid rgba(139, 110, 88, 0.2);
+  border-radius: 10px;
+  padding: 12px 15px;
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #6b5444;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-control:focus {
+  border-color: #8B6E58;
+  box-shadow: 0 0 0 0.2rem rgba(139, 110, 88, 0.25);
+  background-color: rgba(255, 255, 255, 1);
+  outline: none;
+}
+
+.form-control::placeholder {
+  color: rgba(107, 84, 68, 0.6);
+}
+
+/* ===== BOTÓN DE ENVÍO ===== */
+.btn-submit {
+  background: linear-gradient(135deg, #8B6E58 0%, #a67c66 100%);
+  border: none;
+  color: white;
+  padding: 15px 40px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 25px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  min-width: 180px;
+  cursor: pointer;
+}
+
+.btn-submit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  transition: left 0.5s ease;
+}
+
+.btn-submit:hover::before {
+  left: 100%;
+}
+
+.btn-submit:hover {
+  background: linear-gradient(135deg, #6d5244 0%, #8B6E58 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(139, 110, 88, 0.3);
+}
+
+.btn-submit:disabled {
+  opacity: 0.7;
+  transform: none;
+  cursor: not-allowed;
+}
+
+/* ===== ALERTAS DE ÉXITO Y ERROR ===== */
+.alert-success {
+  background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(40, 167, 69, 0.05));
+  border: 1px solid rgba(40, 167, 69, 0.3);
+  color: #155724;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, rgba(220, 53, 69, 0.1), rgba(220, 53, 69, 0.05));
+  border: 1px solid rgba(220, 53, 69, 0.3);
+  color: #721c24;
+  border-radius: 10px;
+  padding: 15px;
+}
+
+/* ===== INFORMACIÓN DE CONTACTO ===== */
+.contact-info {
+  margin-top: 60px;
+}
+
+.contact-info-item {
+  background: rgba(139, 110, 88, 0.05);
+  padding: 30px 20px;
+  border-radius: 15px;
+  transition: transform 0.3s ease;
+  border: 1px solid rgba(139, 110, 88, 0.1);
+  
+}
+
+.contact-info-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(139, 110, 88, 0.1);
+}
+
+.contact-icon {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+
+.contact-info-item h5 {
+  color: #8B6E58;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.contact-info-item p {
+  color: #6b5444;
+  margin: 0;
+  font-size: 1rem;
+}
+
+/* ===== ESTILOS DEL MAPA ===== */
+.map-section {
+  background: rgba(139, 110, 88, 0.05);
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(139, 110, 88, 0.1);
+}
+
+.map-title {
+  color: #8B6E58;
+  font-weight: 700;
+  font-size: 2rem;
+  margin-bottom: 30px;
+}
+
+.map-container {
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(139, 110, 88, 0.2);
+  background: #F3ECE7;
+  border: 3px solid rgba(139, 110, 88, 0.1);
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 450px;
+  border-radius: 15px;
+}
+
+.map-overlay {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: linear-gradient(145deg, rgba(243, 236, 231, 0.95), rgba(248, 243, 238, 0.95));
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(139, 110, 88, 0.3);
+  border: 1px solid rgba(139, 110, 88, 0.2);
+  backdrop-filter: blur(10px);
+  min-width: 200px;
+}
+
+.map-info h6 {
+  color: #8B6E58;
+  font-weight: 700;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.map-info p {
+  color: #6b5444;
+  margin-bottom: 15px;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.btn-map {
+  background: linear-gradient(135deg, #8B6E58 0%, #a67c66 100%);
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-map:hover {
+  background: linear-gradient(135deg, #6d5244 0%, #8B6E58 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(139, 110, 88, 0.4);
+}
+
+/* ===== SPINNER DE CARGA ===== */
+.spinner-border {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  vertical-align: text-bottom;
+  border: 0.15em solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spinner-border 0.75s linear infinite;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15em;
+}
+
+@keyframes spinner-border {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== UTILIDADES ===== */
+.me-2 {
+  margin-right: 0.5rem;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .contact-page {
+    padding: 40px 0;
+  }
+
+  .contact-title {
+    font-size: 2.5rem;
+  }
+
+  .contact-form-container {
+    padding: 25px;
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 15px 20px;
+  }
+
+  .map-section {
+    padding: 20px;
+  }
+
+  .map-title {
+    font-size: 1.8rem;
+  }
+
+  .map-container iframe {
+    height: 300px;
+  }
+
+  .map-overlay {
+    position: relative;
+    top: auto;
+    right: auto;
+    margin-top: 15px;
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .contact-title {
+    font-size: 2rem;
+  }
+
+  .contact-form-container {
+    padding: 20px;
+  }
+
+  .map-section {
+    padding: 15px;
+  }
+
+  .map-title {
+    font-size: 1.6rem;
+  }
+
+  .map-container iframe {
+    height: 250px;
+  }
+}
