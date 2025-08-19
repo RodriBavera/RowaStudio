@@ -1,5 +1,12 @@
+:root {
+  --color-principal: #A8907C;
+  --color-secundario: #F3ECE7;
+  --color-acento: #8B6E58;
+  --color-texto: #4A4A4A;
+}
+
 .header-custom {
-  background-color: #F3ECE7;
+  background-color: var(--color-secundario);
   transition: all 0.3s ease;
   position: sticky !important;
   top: 0;
@@ -9,37 +16,37 @@
 
 /* Cuando el usuario hace scroll */
 .header-custom.scrolled {
-  background-color: #8B6E58; /* color de fondo scrolleado */
-  padding: 0.6rem 0; /* se achica un poco */
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* sombra flotante */
+  background-color: var(--color-acento); /* color de fondo scrolleado */
+  padding: 0.6rem 0; 
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); 
 }
 
 /* Marca */
 .header-custom .brand-name {
   font-weight: 600;
-  font-size: 1.4rem; /* un poco más grande */
-  color: #8B6E58;
+  font-size: 1.4rem;
+  color: var(--color-acento);
   transition: color 0.3s ease;
 }
 
 .header-custom.scrolled .brand-name {
-  color: #fff;
+  color: var(--color-secundario); /* blanco o claro para contraste */
 }
 
 /* Links */
 .header-custom .nav-link {
-  color: #A8907C;
+  color: var(--color-principal);
   font-weight: 500;
   transition: color 0.3s ease;
   font-size: 1.05rem;
 }
 
 .header-custom.scrolled .nav-link {
-  color: #fff;
+  color: var(--color-secundario);
 }
 
 .header-custom .nav-link:hover {
-  color: #F3ECE7;
+  color: var(--color-principal); /* puedes ajustar según contraste */
 }
 
 /* Logo */
@@ -50,7 +57,7 @@
 }
 
 .header-custom.scrolled .logo {
-  height: 50px; /* se reduce un poco al scrollear */
+  height: 50px;
 }
 
 /* Botón hamburguesa */
@@ -64,5 +71,5 @@
 }
 
 .header-custom.scrolled .navbar-toggler-icon {
-  filter: invert(100%); /* cambia a blanco al scrollear */
+  filter: invert(100%); 
 }

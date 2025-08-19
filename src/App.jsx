@@ -5,7 +5,7 @@ import Home from './pages/Home'
 import Tienda from "./components/Tienda/Tienda"
 import Contacto from "./components/Contacto/Contacto"
 import Servicios from "./components/Servicios/Servicios"
-import Galeria from "./components/Galeria/Galeria"
+import SobreMi from "./components/SobreMi/SobreMi"
 
 
 
@@ -15,10 +15,11 @@ const App = () => {
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/sobre-mi" element={<SobreMi />} />
         <Route path="/tienda" element={<Tienda />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/servicios" element={<Servicios />} />
-        <Route path="/galeria" element={<Galeria />} />
+        
       </Routes>
       <Footer />
     </>

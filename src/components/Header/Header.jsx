@@ -31,6 +31,9 @@ export default function Header() {
         <div className="collapse navbar-collapse custom-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item"><Link className="nav-link" to="/">Inicio</Link></li>
+             <li className="nav-item">
+              <Link className="nav-link" to="/sobre-mi">Sobre Mí</Link>
+            </li>
             <li className="nav-item"><Link className="nav-link" to="/servicios">Servicios</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/tienda">Tienda</Link></li>
             <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
