@@ -21,8 +21,8 @@ export default function Footer() {
                 Facebook
               </a>
             </p>
-            <p className="mb-0">Dirección: San Martin Oeste</p>
-            <p className="mb-0">Teléfono: +54 9 2954 123456</p>
+            <p className="mb-0">Dirección: San Martin Oeste 292</p>
+            <p className="mb-0">Teléfono: +54 9 2954 592612</p>
           </div>
         </div>
       </div>

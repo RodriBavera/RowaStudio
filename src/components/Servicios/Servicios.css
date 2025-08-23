@@ -1,28 +1,72 @@
 .servicios-page {
-  margin-top: 60px; /* separa la sección del contenido anterior */
+  margin-top: 60px;
   color: var(--color-texto);
 }
 
-/* Card del carousel */
-.card {
-  background-color: var(--color-secundario);
-  border: 1px solid rgba(168,144,124,0.2);
-  border-radius: 15px;
+.text-center {
+  font-size: 2rem;
+  font-weight: 300;
+  color: var(--color-principal);
+  line-height: 1.4;
+  margin-bottom: 3rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+
+}
+
+.servicios-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, var(--color-principal), var(--color-acento));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.servicios-title::after {
+  content: "";
+  width: 80px;
+  height: 3px;
+  background-color: var(--color-principal);
+  display: block;
+  margin: 8px auto 0;
+  border-radius: 4px;
+}
+
+/* Estilo de las cards */
+.servicio-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+.servicio-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 
-.card-title {
-  color: var(--color-acento);
-  font-weight: bold;
+.servicio-card .card-title {
+  font-weight: 600;
+  color: #4a4a4a;
 }
 
-.card-text {
-  color: var(--color-texto);
+.servicio-card .card-text {
+  color: #666666;
+}
+
+.btn-outline-primary {
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.btn-outline-primary:hover {
+  background-color: #8b6e58;
+  color: #fff;
+  border-color: #8b6e58;
 }
 
 /* Botón */
@@ -31,8 +75,9 @@
   color: white;
   border: none;
   border-radius: 30px;
-  padding: 10px 20px;
+  padding: 8px 18px;
   font-weight: bold;
+  font-size: 0.9rem;
   transition: all 0.3s ease;
 }
 
@@ -42,20 +87,11 @@
   transform: translateY(-3px);
 }
 
-/* Carousel inner */
-.carousel-inner .row {
-  justify-content: center; /* centra las cards */
-}
 
-/* Controles */
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  filter: invert(1); /* para que se vean sobre fondos claros/oscuros */
-}
 
-/* Responsivo */
+/* Responsive */
 @media (max-width: 768px) {
-  .card {
-    margin: 0 auto 20px auto; /* centrado en móviles */
+  .servicio-card {
+    max-width: 100%;
   }
 }
