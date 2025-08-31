@@ -4,149 +4,258 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1050;
+    padding: 20px;
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease-in-out;
 }
 
 .modal-custom {
     background: #fff;
-    border-radius: 8px;
+    border-radius: 16px;
     width: 90%;
     max-width: 800px;
-    padding: 0;
-    animation: fadeIn 0.3s ease-in-out;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    animation: slideIn 0.3s ease-out;
 }
 
 .modal-header-custom {
-    padding: 1rem;
-    border-bottom: 1px solid #ddd;
+    padding: 1.5rem 1.5rem 1rem;
+    border-bottom: 1px solid #f0f0f0;
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
+    background: linear-gradient(to right, #F9F6F3, #FFFFFF);
+}
+
+.modal-title-section {
+    flex: 1;
 }
 
 .modal-header-custom .modal-title {
+    margin: 0 0 0.3rem 0;
+    color: var(--color-acento);
+    font-weight: 700;
+    font-size: 1.5rem;
+    font-family: 'Playfair Display', Georgia, serif;
+}
+
+.modal-subtitle {
     margin: 0;
-    color: #8B6E58;
-    font-weight: 600;
+    color: var(--color-principal);
+    font-size: 0.9rem;
+    font-weight: 500;
 }
 
 .modal-footer-custom {
-    padding: 1rem;
-    border-top: 1px solid #ddd;
+    padding: 1.5rem;
+    border-top: 1px solid #f0f0f0;
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 12px;
+    background: #F9F6F3;
 }
 
 .modal-body-custom {
-    padding: 1rem;
-    max-height: 70vh;
+    padding: 0;
     overflow-y: auto;
+    flex: 1;
 }
 
-/* ✅ Estilos específicos para las imágenes del modal */
-.modal-body-custom img {
+/* Contenedor de imagen */
+.modal-image-container {
+    position: relative;
     width: 100%;
-    max-height: 250px;
+    height: 300px;
+    overflow: hidden;
+}
+
+.modal-image {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 1rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
 }
 
-.detalle-servicio p {
-    margin-bottom: 0.8rem;
-    line-height: 1.6;
-    text-align: justify;
+.modal-image-container:hover .modal-image {
+    transform: scale(1.02);
 }
 
-.detalle-servicio strong {
-    display: block;
-    color: #8B6E58;
-    font-weight: bold;
-    margin-bottom: 0.3rem;
+.detalle-servicio {
+    padding: 1.5rem;
+}
+
+.servicio-seccion {
+    margin-bottom: 1.5rem;
+}
+
+.servicio-seccion:last-child {
+    margin-bottom: 0;
+}
+
+.seccion-titulo {
+    color: var(--color-acento);
+    font-weight: 600;
     font-size: 1.1rem;
+    margin: 0 0 0.8rem 0;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--color-secundario);
+    font-family: 'Playfair Display', Georgia, serif;
 }
 
-.btn-close {
+.seccion-contenido {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--color-texto);
+    text-align: left;
+}
+
+.btn-close-custom {
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     cursor: pointer;
-    color: #999;
+    color: var(--color-principal);
     padding: 0;
     line-height: 1;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s ease;
 }
 
-.btn-close:hover {
-    color: #333;
+.btn-close-custom:hover {
+    color: var(--color-acento);
+    background: rgba(139, 110, 88, 0.1);
+    transform: rotate(90deg);
 }
 
 /* ✅ Estilos para los botones del footer */
 .modal-footer-custom .btn {
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 30px;
     text-decoration: none;
     border: none;
     cursor: pointer;
     font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
 }
 
-.modal-footer-custom .btn-secondary {
-    background-color: #6c757d;
-    color: white;
+.modal-footer-custom .btn-outline-secondary {
+    background-color: transparent;
+    color: var(--color-texto);
+    border: 2px solid var(--color-borde);
 }
 
-.modal-footer-custom .btn-secondary:hover {
-    background-color: #5a6268;
+.modal-footer-custom .btn-outline-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: var(--color-principal);
+    transform: translateY(-2px);
 }
 
 .modal-footer-custom .btn-primary {
-    background-color: #8B6E58;
+    background-color: var(--color-acento);
     color: white;
+    box-shadow: 0 4px 12px rgba(139, 110, 88, 0.3);
 }
 
 .modal-footer-custom .btn-primary:hover {
-    background-color: #6d5244;
+    background-color: var(--color-principal);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(139, 110, 88, 0.4);
+}
+
+.btn-icon {
+    font-size: 1.1rem;
 }
 
 @keyframes fadeIn {
     from {
         opacity: 0;
-        transform: scale(0.95);
     }
-
     to {
         opacity: 1;
-        transform: scale(1);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
 /* ✅ Responsive para móviles */
 @media (max-width: 768px) {
+    .modal-backdrop-custom {
+        padding: 10px;
+    }
+    
     .modal-custom {
         width: 95%;
-        margin: 1rem;
+        max-height: 85vh;
     }
-
-    .modal-body-custom {
-        max-height: 60vh;
+    
+    .modal-header-custom {
+        padding: 1.2rem 1.2rem 0.8rem;
     }
-
-    .modal-body-custom img {
-        max-height: 200px;
+    
+    .modal-header-custom .modal-title {
+        font-size: 1.3rem;
     }
-
+    
+    .modal-image-container {
+        height: 200px;
+    }
+    
+    .detalle-servicio {
+        padding: 1.2rem;
+    }
+    
     .modal-footer-custom {
+        padding: 1.2rem;
         flex-direction: column;
     }
-
+    
     .modal-footer-custom .btn {
         width: 100%;
-        margin-bottom: 0.5rem;
+        justify-content: center;
+    }
+    
+    .seccion-titulo {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .modal-header-custom {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .btn-close-custom {
+        align-self: flex-end;
+    }
+    
+    .modal-title-section {
+        width: 100%;
     }
 }

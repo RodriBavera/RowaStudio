@@ -11,43 +11,69 @@ export default function ModalServicios({ modalData, onClose }) {
         <div className="modal-backdrop-custom">
             <div className="modal-custom">
                 <div className="modal-header-custom">
-                    <h5 className="modal-title">{modalData.titulo}</h5>
+                    <div className="modal-title-section">
+                        <h5 className="modal-title">{modalData.titulo}</h5>
+                        <p className="modal-subtitle">Servicio profesional de estética</p>
+                    </div>
                     <button
                         type="button"
-                        className="btn-close"
+                        className="btn-close-custom"
                         onClick={onClose}
                         aria-label="Cerrar"
-                    ></button>
+                    >
+                        &times;
+                    </button>
                 </div>
+                
                 <div className="modal-body-custom">
-                    <img
-                        src={imagenSrc}
-                        alt={modalData.titulo}
-                        className="img-fluid mb-3 rounded"
-                        onError={(e) => {
-                            console.error(`❌ No se pudo cargar imagen en modal: ${modalData.imagen}`);
-                            e.target.src = "https://via.placeholder.com/400x250?text=Imagen+No+Disponible";
-                        }}
-                    />
-                    {/* Secciones con estilos */}
+                    <div className="modal-image-container">
+                        <img
+                            src={imagenSrc}
+                            alt={modalData.titulo}
+                            className="modal-image"
+                            onError={(e) => {
+                                console.error(`❌ No se pudo cargar imagen en modal: ${modalData.imagen}`);
+                                e.target.src = "https://via.placeholder.com/600x300?text=Imagen+No+Disponible";
+                            }}
+                        />
+                    </div>
+                    
+                    
                     <div className="detalle-servicio">
-                        {modalData.detalle.split(/(?=\¿|¿|Qué|Beneficios|En qué consiste|Cómo funciona|Diagnóstico|Limpieza|Mascarillas|Exfoliación|Extracción|Hidratación|Aparatología)/g).map((seccion, i) => (
-                            <p key={i}>
-                                <strong>
-                                    {seccion.match(/^[^\:]+:/)
-                                        ? seccion.match(/^[^\:]+:/)[0]
-                                        : ""}
-                                </strong>
-                                {seccion.replace(/^[^\:]+:/, "")}
-                            </p>
-                        ))}
+                        {modalData.detalle.split(/(?=\¿|¿|Qué|Beneficios|En qué consiste|Cómo funciona|Diagnóstico|Limpieza|Mascarillas|Exfoliación|Extracción|Hidratación|Aparatología)/g).map((seccion, i) => {
+                            const hasTitle = seccion.match(/^[^\:]+:/);
+                            const title = hasTitle ? hasTitle[0] : "";
+                            const content = seccion.replace(/^[^\:]+:/, "");
+                            
+                            return (
+                                <div key={i} className="servicio-seccion">
+                                    {title && (
+                                        <h6 className="seccion-titulo">
+                                            {title.replace(':', '')}
+                                        </h6>
+                                    )}
+                                    {content && (
+                                        <p className="seccion-contenido">
+                                            {content}
+                                        </p>
+                                    )}
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
+                
                 <div className="modal-footer-custom">
-                    <button className="btn btn-secondary" onClick={onClose}>
+                    <button className="btn btn-outline-secondary" onClick={onClose}>
                         Cerrar
                     </button>
-                    <a href="https://www.tuturno.io/rowastudio?fbclid=PAZXh0bgNhZW0CMTEAAafOB_iH3ySqQ8XZT2auHDlLx7SUYTZS1ynPLFbTfa_OH7pfdza0he1IPtEdJw_aem_ZzYQeuMxEl61itjVPXzCpg" className="btn btn-primary">
+                    <a 
+                        href="https://www.tuturno.io/rowastudio?fbclid=PAZXh0bgNhZW0CMTEAAafOB_iH3ySqQ8XZT2auHDlLx7SUYTZS1ynPLFbTfa_OH7pfdza0he1IPtEdJw_aem_ZzYQeuMxEl61itjVPXzCpg" 
+                        className="btn btn-primary"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        <span className="btn-icon">📅</span>
                         Solicitar turno
                     </a>
                 </div>
