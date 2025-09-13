@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import './Contacto.css'; // Importar el archivo CSS
+import { sendEmail } from '../services/email';
+import './Contacto.css';
 
 export default function Contacto() {
   const [formData, setFormData] = useState({
@@ -27,12 +28,7 @@ export default function Contacto() {
     setSubmitStatus(null);
 
     try {
-      // Aquí irá la configuración de EmailJS
-      // import emailjs from '@emailjs/browser';
-      // await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData, 'YOUR_PUBLIC_KEY');
-
-      // Simulación de envío (reemplaza con EmailJS real)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await sendEmail(formData);
 
       setSubmitStatus('success');
       setFormData({
@@ -43,6 +39,7 @@ export default function Contacto() {
         message: ''
       });
     } catch (error) {
+      console.error('Error sending email:', error);
       setSubmitStatus('error');
     } finally {
       setIsSubmitting(false);
@@ -136,8 +133,8 @@ export default function Contacto() {
                           >
                             <option value="">Selecciona un asunto</option>
                             <option value="consulta-general">Consulta General</option>
-                            <option value="solicitar-cotizacion">Solicitar Cotización</option>
-                            <option value="soporte-tecnico">Soporte Técnico</option>
+                            <option value="solicitar-cotizacion">Solicitar Cotización por Servicio</option>
+                            <option value="soporte-tecnico">Consulta por turnos</option>
                             <option value="reclamos">Reclamos</option>
                             <option value="otros">Otros</option>
                           </select>
@@ -227,7 +224,7 @@ export default function Contacto() {
                       <div className="contact-icon">📱</div>
                       <div className="contact-info-content">
                         <h5>Teléfono</h5>
-                        <p>+54 9 11 1234-5678</p>
+                        <p>2954315039</p>
                       </div>
                     </div>
                   </div>
