@@ -1,0 +1,46 @@
+.btnDetalles { 
+ background-color: #F3ECE7;
+  color: #333;
+  border: 2px solid #F3ECE7;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  flex-grow: 1;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btnDetalles:hover {
+  background-color: #8B6E58;
+  color: white !important;
+  border-color: #8B6E58;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(139, 110, 88, 0.3);
+}
+
+.btnCarrito {
+  background-color: #8B6E58 !important;
+  color: white !important;
+  border: 2px solid #8B6E58 !important;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  min-width: 100px;
+}
+
+/* Hover del botón CARRITO - Se convierte en color detalles */
+.btnCarrito:hover {
+  background-color: #F3ECE7 !important;
+  color: #333 !important;
+  border-color: #F3ECE7 !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(243, 236, 231, 0.3);
+}

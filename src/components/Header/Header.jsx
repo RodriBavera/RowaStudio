@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import logo from "../../assets/logo3.png"; // tu logo nuevo sin texto
+import logo from "../../assets/logo3.png";
 import "./Header.css";
 import { useEffect, useState } from "react";
 
@@ -31,7 +31,7 @@ export default function Header() {
         <div className="collapse navbar-collapse custom-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
             <li className="nav-item"><Link className="nav-link" to="/">Inicio</Link></li>
-             <li className="nav-item">
+            <li className="nav-item">
               <Link className="nav-link" to="/sobre-mi">Sobre Mí</Link>
             </li>
             <li className="nav-item"><Link className="nav-link" to="/servicios">Servicios</Link></li>

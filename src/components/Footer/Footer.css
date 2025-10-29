@@ -1,14 +1,46 @@
 .footer-custom {
-  background-color: #8B6E58; /* tu color de paleta */
+  background-color: #8B6E58;
 }
 
 .footer-link {
   color: #fff;
   text-decoration: underline;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 10px;
+  border-radius: 5px;
 }
 
 .footer-link:hover {
   color: #F3ECE7;
+  transform: translateY(-2px);
+  background-color: rgba(243, 236, 231, 0.1);
+  text-decoration: none;
+}
+
+.footer-social {
+  margin: 0.5rem 0;
+}
+
+/* Estilos específicos para los iconos de Font Awesome */
+.footer-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Color para Instagram (gradiente) */
+.fa-instagram {
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Color para WhatsApp */
+.fa-whatsapp {
+  color: #25D366;
 }
 
 .footer-content {
@@ -47,5 +79,17 @@
   
   .logo-img {
     height: 50px;
+  }
+  
+  .footer-social {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+  
+  .footer-social .footer-link {
+    justify-content: center;
+    width: 150px;
   }
 }

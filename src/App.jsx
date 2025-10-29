@@ -6,7 +6,8 @@ import Tienda from "./components/Tienda/Tienda"
 import Contacto from "./components/Contacto/Contacto"
 import Servicios from "./components/Servicios/Servicios"
 import SobreMi from "./components/SobreMi/SobreMi"
-
+import Success from "./components/Success/Success"
+import Failure from "./components/Failure/Failure"
 
 
 const App = () => {
@@ -19,7 +20,8 @@ const App = () => {
         <Route path="/tienda" element={<Tienda />} />
         <Route path="/contacto" element={<Contacto />} />
         <Route path="/servicios" element={<Servicios />} />
-        
+        <Route path="/success" element={<Success />} />
+        <Route path="/failure" element={<Failure />} />
       </Routes>
       <Footer />
     </>

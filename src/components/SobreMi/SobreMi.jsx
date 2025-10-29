@@ -89,12 +89,7 @@ export default function SobreMi() {
                                             <span className="specialty-name">Cuidado de la Piel</span>
                                         </div>
                                     </div>
-                                    <div className="col-sm-6 mb-2">
-                                        <div className="specialty-item d-flex align-items-center p-3 bg-light rounded shadow-sm">
-                                            <span className="specialty-icon me-3">💅</span>
-                                            <span className="specialty-name">Manicure & Pedicure</span>
-                                        </div>
-                                    </div>
+
                                     <div className="col-sm-6 mb-2">
                                         <div className="specialty-item d-flex align-items-center p-3 bg-light rounded shadow-sm">
                                             <span className="specialty-icon me-3">⚡</span>

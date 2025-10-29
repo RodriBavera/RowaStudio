@@ -1,10 +1,12 @@
 import React from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faInstagram, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 import './Footer.css';
 import logoFooter from '../../assets/imgFooter.png'; 
 
 export default function Footer() {
   return (
-    <footer className="footer-custom text-white py-4 ">
+    <footer className="footer-custom text-white py-4">
       <div className="container">
         <div className="footer-content">
           <div className="footer-logo">
@@ -12,9 +14,22 @@ export default function Footer() {
           </div>
           <div className="footer-text">
             <p className="mb-1">© 2025 Rowa Studio - Todos los derechos reservados</p>
-            <p>
-              <a href="https://www.instagram.com/rowa.studio_/" className="footer-link mx-2">
-                Instagram
+            <p className="footer-social">
+              <a 
+                href="https://www.instagram.com/rowa.studio_/" 
+                className="footer-link mx-2"
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <FontAwesomeIcon icon={faInstagram} /> Instagram
+              </a>
+              <a 
+                href="https://wa.me/542954592612" 
+                className="footer-link mx-2"
+                target="_blank" 
+                rel="noopener noreferrer"
+              >
+                <FontAwesomeIcon icon={faWhatsapp} /> WhatsApp
               </a>
             </p>
             <p className="mb-0">Dirección: San Martin Oeste 292</p>

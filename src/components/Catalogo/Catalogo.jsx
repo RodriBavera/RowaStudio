@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./Catalogo.css";
 
 export default function Catalogo({ productos, onSelectProducto, onAgregarAlCarrito }) {
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState("");
@@ -51,13 +52,13 @@ export default function Catalogo({ productos, onSelectProducto, onAgregarAlCarri
                 </p>
                 <div className="mt-auto d-flex gap-2">
                   <button
-                    className="btn btn-primary flex-grow-1"
+                    className="btnDetalles btn-primary flex-grow-1"
                     onClick={() => onSelectProducto(producto)}
                   >
                     Ver detalle
                   </button>
                   <button
-                    className="btn btn-success"
+                    className="btnCarrito btn-success"
                     onClick={() => onAgregarAlCarrito(producto)}
                   >
                     + Carrito

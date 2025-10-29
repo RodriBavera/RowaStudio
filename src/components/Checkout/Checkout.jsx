@@ -1,49 +1,134 @@
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Checkout.css";
 
-export default function Checkout({ carrito, onVolver, onEnviarPedido }) {
-  const [nombre, setNombre] = useState("");
-  const [telefono, setTelefono] = useState("");
-  const [email, setEmail] = useState("");
-  const [metodoPago, setMetodoPago] = useState("WhatsApp");
-  const [envio, setEnvio] = useState("Retiro en local");
-  const [direccion, setDireccion] = useState("");
-  const [mensajeEnviado, setMensajeEnviado] = useState(false);
+export default function Checkout() {
+  const navigate = useNavigate();
 
-  function manejarEnvio(e) {
-    e.preventDefault();
+  // Estados vacíos - sin datos de ejemplo
+  const [cliente, setCliente] = useState({
+    nombre: "",
+    email: "",
+    telefono: "",
+    direccion: ""
+  });
 
-    let mensaje = `Pedido de ${nombre}\nTel: ${telefono}\nEmail: ${email}\nMétodo de pago: ${metodoPago}\nEnvío: ${envio}`;
-    
-    // Agregar dirección si es envío a domicilio
-    if (envio === "Envío a domicilio" && direccion) {
-      mensaje += `\nDirección: ${direccion}`;
+  const [carrito, setCarrito] = useState([]);
+  const [formaPago, setFormaPago] = useState("");
+  const [formaEnvio, setFormaEnvio] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [mensaje, setMensaje] = useState("");
+
+  // Cargar carrito desde localStorage al iniciar
+  useEffect(() => {
+    const carritoGuardado = localStorage.getItem('carrito');
+    if (carritoGuardado) {
+      try {
+        const carritoParseado = JSON.parse(carritoGuardado);
+        if (Array.isArray(carritoParseado) && carritoParseado.length > 0) {
+          setCarrito(carritoParseado);
+        }
+      } catch (error) {
+        console.error("Error cargando carrito:", error);
+        localStorage.removeItem('carrito');
+      }
     }
-    
-    mensaje += `\nProductos:\n`;
-    carrito.forEach((item) => {
-      mensaje += `- ${item.nombre} x ${item.cantidad} = $${item.precio * item.cantidad}\n`;
-    });
+  }, []);
 
-    const telefonoWspNegocio = "542954315039"; 
-    const urlWhatsapp = `https://api.whatsapp.com/send?phone=${telefonoWspNegocio}&text=${encodeURIComponent(mensaje)}`;
-    window.open(urlWhatsapp, "_blank");
+  // Guardar carrito en localStorage cuando cambie
+  useEffect(() => {
+    if (carrito.length > 0) {
+      localStorage.setItem('carrito', JSON.stringify(carrito));
+    }
+  }, [carrito]);
 
-    setMensajeEnviado(true);
-    onEnviarPedido();
-  }
+  const total = carrito.reduce((acc, p) => acc + (p.precio * p.cantidad), 0);
 
-  if (mensajeEnviado) {
+  const handleChange = (e) => {
+    setCliente({ ...cliente, [e.target.name]: e.target.value });
+  };
+
+  const handlePagar = async () => {
+    // Validaciones
+    if (!cliente.nombre || !cliente.email) {
+      setMensaje("Por favor, completa tu nombre y email.");
+      return;
+    }
+
+    if (!cliente.telefono) {
+      setMensaje("Por favor, ingresa tu teléfono para contactarte.");
+      return;
+    }
+
+    if (carrito.length === 0) {
+      setMensaje("Tu carrito está vacío.");
+      return;
+    }
+
+    if (!formaPago) {
+      setMensaje("Selecciona una forma de pago.");
+      return;
+    }
+
+    if (!formaEnvio) {
+      setMensaje("Selecciona una forma de envío.");
+      return;
+    }
+
+    setMensaje("");
+    setLoading(true);
+
+    try {
+      console.log("🔄 Iniciando proceso de pago...");
+
+      const res = await fetch("http://localhost:8080/create_preference", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          carrito,
+          cliente,
+          envio: formaEnvio,
+          formaPago
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Error ${res.status}`);
+      }
+
+      const data = await res.json();
+      console.log("✅ Preferencia creada:", data);
+
+      if (data.id) {
+        // Limpiar carrito antes de redirigir a MercadoPago
+        localStorage.removeItem('carrito');
+        setCarrito([]);
+
+        console.log("🎯 Redirigiendo a MercadoPago...");
+        window.location.href = `https://sandbox.mercadopago.com.ar/checkout/v1/redirect?pref_id=${data.id}`;
+      }
+
+    } catch (error) {
+      console.error("❌ Error:", error);
+      setMensaje(`Error: ${error.message}`);
+      setLoading(false);
+    }
+  };
+
+  // Si el carrito está vacío, mostrar mensaje
+  if (carrito.length === 0) {
     return (
       <div className="checkout-container">
-        <div className="container my-4">
-          <div className="success-message">
-            <h2>¡Gracias por tu pedido!</h2>
-            <p>Te contactaremos a la brevedad para coordinar.</p>
-            <button className="btn btn-primary" onClick={onVolver}>
-              Volver a la tienda
-            </button>
-          </div>
+        <div className="carrito-vacio">
+          <h2>Carrito Vacío</h2>
+          <p>No hay productos en tu carrito.</p>
+          <button
+            onClick={() => navigate('/')}
+            className="boton-volver"
+          >
+            Volver a la Tienda
+          </button>
         </div>
       </div>
     );
@@ -51,127 +136,127 @@ export default function Checkout({ carrito, onVolver, onEnviarPedido }) {
 
   return (
     <div className="checkout-container">
-      <div className="container my-4">
-        <div className="row justify-content-center">
-          <div className="col-md-10 col-lg-8">
-            <div className="checkout-card card shadow">
-              <div className="checkout-header card-header bg-primary text-white">
-                <h2 className="mb-0">Finalizar compra</h2>
-              </div>
-              <div className="card-body">
-                <form onSubmit={manejarEnvio} className="checkout-form">
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Nombre completo *</label>
-                      <input 
-                        type="text" 
-                        required 
-                        className="form-control" 
-                        value={nombre} 
-                        onChange={(e) => setNombre(e.target.value)} 
-                      />
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Teléfono *</label>
-                      <input 
-                        type="tel" 
-                        required 
-                        className="form-control" 
-                        value={telefono} 
-                        onChange={(e) => setTelefono(e.target.value)} 
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="mb-3">
-                    <label className="form-label">Email</label>
-                    <input 
-                      type="email" 
-                      className="form-control" 
-                      value={email} 
-                      onChange={(e) => setEmail(e.target.value)} 
-                    />
-                  </div>
-                  
-                  <div className="row">
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Método de pago</label>
-                      <select 
-                        className="form-select" 
-                        value={metodoPago} 
-                        onChange={(e) => setMetodoPago(e.target.value)}
-                      >
-                        <option>WhatsApp</option>
-                        <option>Transferencia</option>
-                        <option>Mercado Pago</option>
-                        <option>Tarjeta en el local</option>
-                      </select>
-                    </div>
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label">Método de envío</label>
-                      <select 
-                        className="form-select" 
-                        value={envio} 
-                        onChange={(e) => setEnvio(e.target.value)}
-                      >
-                        <option>Retiro en local</option>
-                        <option>Envío a domicilio</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  {envio === "Envío a domicilio" && (
-                    <div className="mb-3 address-field">
-                      <label className="form-label">Dirección de envío *</label>
-                      <input 
-                        type="text" 
-                        required 
-                        className="form-control" 
-                        placeholder="Ingresa tu dirección completa" 
-                        value={direccion} 
-                        onChange={(e) => setDireccion(e.target.value)} 
-                      />
-                      <div className="form-text">
-                        Por favor incluye calle, número, piso/depto, y localidad.
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div className="mt-4">
-                    <h5>Resumen del pedido:</h5>
-                    <div className="order-summary">
-                      <ul className="list-group mb-3">
-                        {carrito.map((item, index) => (
-                          <li key={index} className="order-item list-group-item d-flex justify-content-between align-items-center">
-                            <span>{item.nombre} x {item.cantidad}</span>
-                            <span>${item.precio * item.cantidad}</span>
-                          </li>
-                        ))}
-                        <li className="order-item order-total list-group-item d-flex justify-content-between align-items-center">
-                          <strong>Total</strong>
-                          <strong>$
-                            {carrito.reduce((total, item) => total + (item.precio * item.cantidad), 0)}
-                          </strong>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  
-                  <div className="d-flex justify-content-between mt-4 button-group">
-                    <button type="button" className="btn-checkout btn-secondary" onClick={onVolver}>
-                      ← Volver al carrito
-                    </button>
-                    <button type="submit" className="btn-checkout btn-whatsapp">
-                      <i className="bi bi-whatsapp"></i>
-                      Enviar pedido por WhatsApp
-                    </button>
-                  </div>
-                </form>
-              </div>
+      <h2>Finalizar Compra</h2>
+
+      <div className="checkout-section">
+        <h3>📋 Tus Datos</h3>
+        <input
+          type="text"
+          name="nombre"
+          placeholder="Nombre completo *"
+          value={cliente.nombre}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Correo electrónico *"
+          value={cliente.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="tel"
+          name="telefono"
+          placeholder="Teléfono *"
+          value={cliente.telefono}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="direccion"
+          placeholder="Dirección *"
+          value={cliente.direccion}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div className="checkout-section">
+        <h3>🚚 Forma de Envío</h3>
+        <label>
+          <input
+            type="radio"
+            name="envio"
+            value="Envío a domicilio"
+            checked={formaEnvio === "Envío a domicilio"}
+            onChange={(e) => setFormaEnvio(e.target.value)}
+          />
+          Envío a domicilio (+$500)
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="envio"
+            value="Retiro en el local"
+            checked={formaEnvio === "Retiro en el local"}
+            onChange={(e) => setFormaEnvio(e.target.value)}
+          />
+          Retiro en el local (Gratis)
+        </label>
+      </div>
+
+      <div className="checkout-section">
+        <h3>💳 Forma de Pago</h3>
+        <label>
+          <input
+            type="radio"
+            name="pago"
+            value="mercadopago"
+            checked={formaPago === "mercadopago"}
+            onChange={(e) => setFormaPago(e.target.value)}
+          />
+          Mercado Pago (Tarjetas, Efectivo)
+        </label>
+      </div>
+
+      <div className="checkout-section">
+        <h3>🛒 Resumen de tu Pedido</h3>
+        <div className="resumen-productos">
+          {carrito.map((producto, index) => (
+            <div key={index} className="producto-item">
+              <span className="producto-nombre">{producto.nombre}</span>
+              <span className="producto-cantidad">x{producto.cantidad}</span>
+              <span className="producto-precio">${producto.precio * producto.cantidad}</span>
             </div>
+          ))}
+        </div>
+
+        {formaEnvio === "Envío a domicilio" && (
+          <div className="envio-costo">
+            <span>Costo de envío:</span>
+            <span>+$500</span>
           </div>
+        )}
+
+        <div className="total-final">
+          <span>Total:</span>
+          <span>${formaEnvio === "Envío a domicilio" ? total + 500 : total}</span>
         </div>
       </div>
+
+      {mensaje && (
+        <div className={`mensaje ${mensaje.includes('Error') ? 'error' : 'info'}`}>
+          {mensaje}
+        </div>
+      )}
+
+      <button
+        onClick={handlePagar}
+        disabled={loading}
+        className="boton-pagar"
+      >
+        {loading ? "🔄 Procesando..." : `💳 Pagar $${formaEnvio === "Envío a domicilio" ? total + 500 : total}`}
+      </button>
+
+      <button
+        onClick={() => navigate('/')}
+        className="boton-secundario"
+      >
+        ← Seguir Comprando
+      </button>
     </div>
   );
 }
