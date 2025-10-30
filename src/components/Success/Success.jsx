@@ -1,62 +1,73 @@
-import { useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import './Success.css';
+// success.jsx
+import { useEffect, useState } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
 
-export default function Success() {
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+const SuccessPage = () => {
+    const [searchParams] = useSearchParams();
+    const [paymentData, setPaymentData] = useState(null);
 
-  useEffect(() => {
-    console.log('✅ Pago exitoso - Proceso completado');
-    
-    
-    localStorage.removeItem('carrito');
-    
-    // Los datos del pago vienen en los parámetros de URL
-    const paymentId = searchParams.get('payment_id');
-    const status = searchParams.get('status');
-    
-    console.log('Payment ID:', paymentId);
-    console.log('Status:', status);
-
-  }, [searchParams]);
-
-  const handleVolverInicio = () => {
-    navigate('/');
-  };
-
-  
-
-  return (
-    <div className="success-container">
-      <div className="success-content">
-        <div className="success-icon">✅</div>
-        <h1>¡Compra Exitosa!</h1>
-        <p>Tu pedido ha sido procesado correctamente.</p>
-        <p>Hemos enviado un email de confirmación con los detalles de tu compra.</p>
-        <p className="success-details">
-          <strong>Número de pedido:</strong> #{Date.now()}
-        </p>
+    useEffect(() => {
+        // Obtener datos del pago de los query params
+        const paymentId = searchParams.get('payment_id');
+        const status = searchParams.get('status');
+        const externalReference = searchParams.get('external_reference');
         
-        <div className="success-buttons">
-          <button 
-            onClick={handleVolverInicio}
-            className="btn btn-primary"
-          >
-            🏠 Volver al Inicio
-          </button>
-          <button 
-            onClick={handleVerPedidos}
-            className="btn btn-secondary"
-          >
-            📦 Ver Mis Pedidos
-          </button>
+        console.log('✅ Parámetros recibidos:', {
+            paymentId,
+            status,
+            externalReference
+        });
+
+        if (paymentId) {
+            // Opcional: Verificar el pago con tu backend
+            verificarPago(paymentId);
+        }
+
+        // Limpiar carrito y hacer otras acciones post-pago
+        limpiarCarrito();
+    }, [searchParams]);
+
+    const verificarPago = async (paymentId) => {
+        try {
+            const response = await fetch(`/api/verificar-pago/${paymentId}`);
+            const data = await response.json();
+            setPaymentData(data);
+        } catch (error) {
+            console.error('Error verificando pago:', error);
+        }
+    };
+
+    const limpiarCarrito = () => {
+        // Tu lógica para limpiar el carrito
+        localStorage.removeItem('carrito');
+    };
+
+    return (
+        <div className="success-page">
+            <div className="success-container">
+                <div className="success-icon">✅</div>
+                <h1>¡Pago Exitoso!</h1>
+                <p>Tu compra ha sido procesada correctamente.</p>
+                
+                {paymentData && (
+                    <div className="payment-details">
+                        <p><strong>ID de pago:</strong> {paymentData.id}</p>
+                        <p><strong>Estado:</strong> {paymentData.status}</p>
+                        <p><strong>Monto:</strong> ${paymentData.transaction_amount}</p>
+                    </div>
+                )}
+                
+                <div className="success-actions">
+                    <Link to="/" className="btn btn-primary">
+                        Volver a la tienda
+                    </Link>
+                    <button onClick={() => window.print()} className="btn btn-secondary">
+                        Imprimir comprobante
+                    </button>
+                </div>
+            </div>
         </div>
-        
-        <p className="success-note">
-          Si tienes alguna duda, contáctanos por WhatsApp.
-        </p>
-      </div>
-    </div>
-  );
-}
+    );
+};
+
+export default SuccessPage;

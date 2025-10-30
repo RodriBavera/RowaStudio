@@ -5,7 +5,6 @@ import "./Checkout.css";
 export default function Checkout() {
   const navigate = useNavigate();
 
-  // Estados vacíos - sin datos de ejemplo
   const [cliente, setCliente] = useState({
     nombre: "",
     email: "",
@@ -35,14 +34,8 @@ export default function Checkout() {
     }
   }, []);
 
-  // Guardar carrito en localStorage cuando cambie
-  useEffect(() => {
-    if (carrito.length > 0) {
-      localStorage.setItem('carrito', JSON.stringify(carrito));
-    }
-  }, [carrito]);
-
   const total = carrito.reduce((acc, p) => acc + (p.precio * p.cantidad), 0);
+  const totalConEnvio = formaEnvio === "Envío a domicilio" ? total + 500 : total;
 
   const handleChange = (e) => {
     setCliente({ ...cliente, [e.target.name]: e.target.value });
@@ -65,11 +58,6 @@ export default function Checkout() {
       return;
     }
 
-    if (!formaPago) {
-      setMensaje("Selecciona una forma de pago.");
-      return;
-    }
-
     if (!formaEnvio) {
       setMensaje("Selecciona una forma de envío.");
       return;
@@ -81,32 +69,37 @@ export default function Checkout() {
     try {
       console.log("🔄 Iniciando proceso de pago...");
 
-      const res = await fetch("http://localhost:8080/create_preference", {
+      // ✅ URL RELATIVA - funciona tanto en desarrollo como producción
+      const res = await fetch("/api/create-preference", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           carrito,
           cliente,
           envio: formaEnvio,
-          formaPago
+          formaPago: "mercadopago"
         }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || `Error ${res.status}`);
+        throw new Error(data.error || `Error ${res.status}`);
       }
 
-      const data = await res.json();
       console.log("✅ Preferencia creada:", data);
 
       if (data.id) {
-        // Limpiar carrito antes de redirigir a MercadoPago
+        // Limpiar carrito antes de redirigir
         localStorage.removeItem('carrito');
         setCarrito([]);
 
-        console.log("🎯 Redirigiendo a MercadoPago...");
-        window.location.href = `https://sandbox.mercadopago.com.ar/checkout/v1/redirect?pref_id=${data.id}`;
+        console.log("🎯 Redirigiendo a Mercado Pago...");
+        
+        // ✅ URL en español
+        window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?preference-id=${data.id}&lang=es`;
       }
 
     } catch (error) {
