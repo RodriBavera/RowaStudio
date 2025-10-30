@@ -1,9 +1,5 @@
-// api/create-preference.js
-import { MercadoPagoConfig, Preference } from 'mercadopago';
 
-// Para Vercel Serverless, necesitamos una versión compatible
-// Si no funciona, usaremos fetch directo a la API
-
+// api/create-preference.js - VERSIÓN SIMPLIFICADA Y FUNCIONAL
 export default async function handler(req, res) {
   // Configurar CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,66 +15,84 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log('📨 API recibió request');
+    
     const { carrito, cliente, envio } = req.body;
     
-    console.log('🛒 Procesando carrito con', carrito?.length, 'productos');
-    
-    // Validaciones
+    // Validaciones básicas
     if (!carrito || carrito.length === 0) {
       return res.status(400).json({ error: 'Carrito vacío' });
+    }
+
+    if (!cliente || !cliente.nombre || !cliente.email) {
+      return res.status(400).json({ error: 'Datos del cliente incompletos' });
     }
 
     // Calcular total
     const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
     const totalConEnvio = envio === "Envío a domicilio" ? total + 500 : total;
 
-    console.log('💰 Total calculado:', totalConEnvio);
+    console.log('💰 Total:', totalConEnvio);
 
-    // ✅ OPCIÓN A: Usar fetch directo a la API de Mercado Pago (MÁS CONFIABLE)
-    const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
+    // Verificar que tenemos el token de MP
+    const mpToken = process.env.MP_ACCESS_TOKEN;
+    if (!mpToken) {
+      throw new Error('MP_ACCESS_TOKEN no configurado en Vercel');
+    }
+
+    console.log('🔑 Token MP encontrado');
+
+    // Crear preferencia usando fetch a la API de Mercado Pago
+    const mpResponse = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${process.env.MP_ACCESS_TOKEN}`,
+        'Authorization': `Bearer ${mpToken}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        items: [{
-          title: carrito.length === 1 ? carrito[0].nombre : `Compra de ${carrito.length} productos`,
-          quantity: 1,
-          currency_id: 'ARS',
-          unit_price: totalConEnvio,
-        }],
+        items: [
+          {
+            title: carrito.length === 1 
+              ? carrito[0].nombre 
+              : `Compra de ${carrito.length} productos en RowaStudio`,
+            quantity: 1,
+            currency_id: 'ARS',
+            unit_price: totalConEnvio,
+          }
+        ],
         back_urls: {
-          success: `${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://tu-app.vercel.app'}/success`,
-          failure: `${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://tu-app.vercel.app'}/failure`,
-          pending: `${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://tu-app.vercel.app'}/pending`,
+          success: `https://${process.env.VERCEL_URL}/success`,
+          failure: `https://${process.env.VERCEL_URL}/failure`,
+          pending: `https://${process.env.VERCEL_URL}/pending`,
         },
         auto_return: 'approved',
         statement_descriptor: 'ROWASTUDIO'
       }),
     });
 
-    if (!response.ok) {
-      const errorData = await response.text();
-      throw new Error(`MercadoPago API error: ${response.status} - ${errorData}`);
+    if (!mpResponse.ok) {
+      const errorText = await mpResponse.text();
+      console.error('❌ Error de Mercado Pago:', mpResponse.status, errorText);
+      throw new Error(`Error de Mercado Pago: ${mpResponse.status}`);
     }
 
-    const data = await response.json();
+    const mpData = await mpResponse.json();
     
-    console.log('✅ Preferencia creada:', data.id);
+    console.log('✅ Preferencia creada exitosamente:', mpData.id);
 
     return res.status(200).json({
       success: true,
-      id: data.id,
-      init_point: data.init_point,
+      id: mpData.id,
+      init_point: mpData.init_point,
       message: 'Preferencia creada correctamente'
     });
 
   } catch (error) {
-    console.error('💥 Error:', error);
+    console.error('💥 Error en API:', error);
     return res.status(500).json({ 
       success: false,
-      error: error.message 
+      error: error.message,
+      details: 'Verifica las variables de entorno en Vercel'
     });
   }
 }
