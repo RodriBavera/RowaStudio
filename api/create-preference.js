@@ -1,5 +1,4 @@
 
-// api/create-preference.js - VERSIÓN SIMPLIFICADA Y FUNCIONAL
 export default async function handler(req, res) {
   // Configurar CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -34,7 +33,6 @@ export default async function handler(req, res) {
 
     console.log('💰 Total:', totalConEnvio);
 
-    // Verificar que tenemos el token de MP
     const mpToken = process.env.MP_ACCESS_TOKEN;
     if (!mpToken) {
       throw new Error('MP_ACCESS_TOKEN no configurado en Vercel');

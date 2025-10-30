@@ -70,7 +70,6 @@ export default function Checkout() {
       console.log("🔄 Iniciando proceso de pago...");
       console.log("🔗 URL de API: /api/create-preference");
 
-      // ✅ URL CORRECTA - sin localhost:8080
       const res = await fetch("/api/create-preference", {
         method: "POST",
         headers: {
@@ -103,7 +102,7 @@ export default function Checkout() {
 
         console.log("🎯 Redirigiendo a Mercado Pago...");
 
-        // ✅ URL en español
+      
         window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?preference-id=${data.id}&lang=es`;
       }
 
@@ -113,7 +112,7 @@ export default function Checkout() {
       setLoading(false);
     }
   };
-  // Si el carrito está vacío, mostrar mensaje
+  
   if (carrito.length === 0) {
     return (
       <div className="checkout-container">
