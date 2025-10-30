@@ -66,48 +66,45 @@ export default function Checkout() {
     setMensaje("");
     setLoading(true);
 
-    try {
-      console.log("🔄 Iniciando proceso de pago...");
+try {
+    console.log("🔄 Iniciando proceso de pago...");
 
-      // ✅ URL RELATIVA - funciona tanto en desarrollo como producción
-      const res = await fetch("/api/create-preference", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          carrito,
-          cliente,
-          envio: formaEnvio,
-          formaPago: "mercadopago"
-        }),
-      });
+    // ✅ URL CORRECTA - sin localhost:8080
+    const res = await fetch("/api/create-preference", {
+      method: "POST",
+      headers: { 
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        carrito,
+        cliente,
+        envio: formaEnvio,
+        formaPago: "mercadopago"
+      }),
+    });
 
-      const data = await res.json();
+    const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(data.error || `Error ${res.status}`);
-      }
-
-      console.log("✅ Preferencia creada:", data);
-
-      if (data.id) {
-        // Limpiar carrito antes de redirigir
-        localStorage.removeItem('carrito');
-        setCarrito([]);
-
-        console.log("🎯 Redirigiendo a Mercado Pago...");
-        
-        // ✅ URL en español
-        window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?preference-id=${data.id}&lang=es`;
-      }
-
-    } catch (error) {
-      console.error("❌ Error:", error);
-      setMensaje(`Error: ${error.message}`);
-      setLoading(false);
+    if (!res.ok) {
+      throw new Error(data.error || `Error ${res.status}`);
     }
-  };
+
+    console.log("✅ Preferencia creada:", data);
+
+    if (data.id) {
+      localStorage.removeItem('carrito');
+      setCarrito([]);
+      
+      console.log("🎯 Redirigiendo a Mercado Pago...");
+      window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?preference-id=${data.id}&lang=es`;
+    }
+
+  } catch (error) {
+    console.error("❌ Error:", error);
+    setMensaje(`Error: ${error.message}`);
+    setLoading(false);
+  }
+};
 
   // Si el carrito está vacío, mostrar mensaje
   if (carrito.length === 0) {
