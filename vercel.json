@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1"
+    },
+    {
+      "src": "/success",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/failure",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/pending", 
+      "dest": "/index.html"
+    },
+    {
+      "src": "/checkout",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
