@@ -1,123 +1,84 @@
-import { MercadoPagoConfig, Preference } from "mercadopago";
+// api/create-preference.js
+import { MercadoPagoConfig, Preference } from 'mercadopago';
 
-// Configura CORS headers
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
+// Para Vercel Serverless, necesitamos una versión compatible
+// Si no funciona, usaremos fetch directo a la API
 
 export default async function handler(req, res) {
-  // Manejar preflight OPTIONS request
+  // Configurar CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
   if (req.method === 'OPTIONS') {
-    return res.status(200).json({}, { headers: corsHeaders });
+    return res.status(200).end();
   }
 
   if (req.method !== 'POST') {
-    return res.status(405).json({ 
-      error: 'Método no permitido' 
-    }, { headers: corsHeaders });
+    return res.status(405).json({ error: 'Método no permitido' });
   }
 
   try {
-    const { carrito, cliente, envio, formaPago } = req.body;
+    const { carrito, cliente, envio } = req.body;
     
-    console.log('📦 Recibiendo datos del carrito:', carrito);
-    console.log('👤 Datos del cliente:', cliente);
-
-    // Validaciones básicas
+    console.log('🛒 Procesando carrito con', carrito?.length, 'productos');
+    
+    // Validaciones
     if (!carrito || carrito.length === 0) {
-      return res.status(400).json({
-        success: false,
-        error: 'El carrito está vacío'
-      }, { headers: corsHeaders });
+      return res.status(400).json({ error: 'Carrito vacío' });
     }
-
-    if (!cliente || !cliente.email || !cliente.nombre) {
-      return res.status(400).json({
-        success: false,
-        error: 'Datos del cliente incompletos'
-      }, { headers: corsHeaders });
-    }
-
-    // Inicializar cliente de Mercado Pago
-    const client = new MercadoPagoConfig({ 
-      accessToken: process.env.MP_ACCESS_TOKEN 
-    });
 
     // Calcular total
     const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
-    
-    console.log('💰 Total calculado:', total);
+    const totalConEnvio = envio === "Envío a domicilio" ? total + 500 : total;
 
-    // Determinar la URL base
-    const baseUrl = process.env.VERCEL_URL 
-      ? `https://${process.env.VERCEL_URL}`
-      : 'https://rowa-studio.vercel.app/'; 
+    console.log('💰 Total calculado:', totalConEnvio);
 
-    const body = {
-      items: [{
-        title: carrito.length === 1 
-          ? carrito[0].nombre 
-          : `Compra de ${carrito.length} productos en RowaStudio`,
-        quantity: 1,
-        currency_id: "ARS",
-        unit_price: total,
-      }],
-      back_urls: {
-        success: `${baseUrl}/success`,
-        failure: `${baseUrl}/failure`, 
-        pending: `${baseUrl}/pending`,
+    // ✅ OPCIÓN A: Usar fetch directo a la API de Mercado Pago (MÁS CONFIABLE)
+    const response = await fetch('https://api.mercadopago.com/checkout/preferences', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.MP_ACCESS_TOKEN}`,
+        'Content-Type': 'application/json',
       },
-      auto_return: "approved",
-      payer: {
-        name: cliente.nombre,
-        email: cliente.email,
-        phone: {
-          number: cliente.telefono || "1112345678"
+      body: JSON.stringify({
+        items: [{
+          title: carrito.length === 1 ? carrito[0].nombre : `Compra de ${carrito.length} productos`,
+          quantity: 1,
+          currency_id: 'ARS',
+          unit_price: totalConEnvio,
+        }],
+        back_urls: {
+          success: `${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://tu-app.vercel.app'}/success`,
+          failure: `${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://tu-app.vercel.app'}/failure`,
+          pending: `${process.env.VERCEL_URL ? 'https://' + process.env.VERCEL_URL : 'https://tu-app.vercel.app'}/pending`,
         },
-        address: {
-          street_name: cliente.direccion || "No especificada",
-          zip_code: "1001"
-        }
-      },
-      payment_methods: {
-        excluded_payment_types: [
-          { id: "atm" }
-        ],
-        installments: 1
-      },
-      notification_url: `${baseUrl}/api/webhooks`, // Opcional para webhooks
-      statement_descriptor: "ROWASTUDIO",
-      metadata: {
-        client_name: cliente.nombre,
-        client_email: cliente.email,
-        products_count: carrito.length,
-        total_amount: total
-      }
-    };
+        auto_return: 'approved',
+        statement_descriptor: 'ROWASTUDIO'
+      }),
+    });
 
-    console.log('🎯 Creando preferencia con datos:', JSON.stringify(body, null, 2));
+    if (!response.ok) {
+      const errorData = await response.text();
+      throw new Error(`MercadoPago API error: ${response.status} - ${errorData}`);
+    }
 
-    const preference = new Preference(client);
-    const result = await preference.create({ body });
+    const data = await response.json();
+    
+    console.log('✅ Preferencia creada:', data.id);
 
-    console.log('✅ Preferencia creada exitosamente:', result.id);
-
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      id: result.id,
-      init_point: result.init_point,
+      id: data.id,
+      init_point: data.init_point,
       message: 'Preferencia creada correctamente'
-    }, { headers: corsHeaders });
+    });
 
   } catch (error) {
-    console.error('💥 Error creando preferencia:', error);
-    
-    res.status(500).json({
+    console.error('💥 Error:', error);
+    return res.status(500).json({ 
       success: false,
-      error: error.message || 'Error interno del servidor',
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    }, { headers: corsHeaders });
+      error: error.message 
+    });
   }
 }
