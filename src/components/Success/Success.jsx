@@ -1,29 +1,28 @@
 import { useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Success() {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    console.log("✅ Pago exitoso - Parámetros:", Object.fromEntries(searchParams));
+    console.log("✅ Pago exitoso - URL completa:", window.location.href);
+    
+    // Obtener parámetros del hash o de la URL
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log("📊 Parámetros de pago:", Object.fromEntries(urlParams));
     
     // Limpiar carritos
-    const carritoPendiente = localStorage.getItem('carrito_pendiente');
-    if (carritoPendiente) {
-      console.log("🛒 Carrito procesado:", JSON.parse(carritoPendiente));
-      localStorage.removeItem('carrito_pendiente');
-    }
+    localStorage.removeItem('carrito_pendiente');
+    localStorage.removeItem('carrito');
     
-    localStorage.removeItem('carrito'); // Limpiar carrito principal
-    
-    // Redirigir después de mostrar el éxito
+    // Redirigir después de 5 segundos
     const timer = setTimeout(() => {
       navigate('/tienda');
     }, 5000);
     
     return () => clearTimeout(timer);
-  }, [searchParams, navigate]);
+  }, [navigate, location]);
 
   return (
     <div className="success-page">
