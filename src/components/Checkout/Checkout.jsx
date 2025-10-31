@@ -1,143 +1,258 @@
-// Checkout.jsx - VERSIÓN SIMPLIFICADA
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "./Checkout.css";
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const [carrito, setCarrito] = useState([]);
-  const [loading, setLoading] = useState(false);
 
+  const [cliente, setCliente] = useState({
+    nombre: "",
+    email: "",
+    telefono: "",
+    direccion: ""
+  });
+
+  const [carrito, setCarrito] = useState([]);
+  const [formaPago, setFormaPago] = useState("");
+  const [formaEnvio, setFormaEnvio] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [mensaje, setMensaje] = useState("");
+
+  // Cargar carrito desde localStorage al iniciar
   useEffect(() => {
     const carritoGuardado = localStorage.getItem('carrito');
     if (carritoGuardado) {
-      setCarrito(JSON.parse(carritoGuardado));
+      try {
+        const carritoParseado = JSON.parse(carritoGuardado);
+        if (Array.isArray(carritoParseado) && carritoParseado.length > 0) {
+          setCarrito(carritoParseado);
+        }
+      } catch (error) {
+        console.error("Error cargando carrito:", error);
+        localStorage.removeItem('carrito');
+      }
     }
   }, []);
 
+  const total = carrito.reduce((acc, p) => acc + (p.precio * p.cantidad), 0);
+  const totalConEnvio = formaEnvio === "Envío a domicilio" ? total + 500 : total;
+
+  const handleChange = (e) => {
+    setCliente({ ...cliente, [e.target.name]: e.target.value });
+  };
+
   const handlePagar = async () => {
-    if (carrito.length === 0) return;
-    
+    // Validaciones
+    if (!cliente.nombre || !cliente.email) {
+      setMensaje("Por favor, completa tu nombre y email.");
+      return;
+    }
+
+    if (!cliente.telefono) {
+      setMensaje("Por favor, ingresa tu teléfono para contactarte.");
+      return;
+    }
+
+    if (carrito.length === 0) {
+      setMensaje("Tu carrito está vacío.");
+      return;
+    }
+
+    if (!formaEnvio) {
+      setMensaje("Selecciona una forma de envío.");
+      return;
+    }
+
+    setMensaje("");
     setLoading(true);
 
     try {
-      const cliente = {
-        nombre: "Cliente", // En un caso real, esto vendría de un formulario
-        email: "cliente@ejemplo.com",
-        telefono: "123456789",
-        direccion: "Dirección ejemplo"
-      };
+      console.log("🔄 Iniciando proceso de pago...");
+      console.log("🔗 URL de API: /api/create-preference");
 
       const res = await fetch("/api/create-preference", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           carrito,
           cliente,
-          envio: "Retiro en el local"
+          envio: formaEnvio,
+          formaPago: "mercadopago"
         }),
       });
 
-      if (!res.ok) throw new Error('Error al crear preferencia');
+      console.log("📨 Status de respuesta:", res.status);
+      console.log("📨 OK:", res.ok);
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error("❌ Error response:", errorText);
+        throw new Error(`Error ${res.status}: ${errorText}`);
+      }
 
       const data = await res.json();
+      console.log("✅ Preferencia creada:", data);
+
+      if (data.id) {
+        // Limpiar carrito antes de redirigir
+        localStorage.removeItem('carrito');
+        setCarrito([]);
+
+        console.log("🎯 Redirigiendo a Mercado Pago...");
+
       
-      if (data.init_point) {
-        // ✅ GUARDAMOS EL CARRITO TEMPORALMENTE
-        localStorage.setItem('carrito_pendiente', JSON.stringify(carrito));
-        
-        // ✅ ABRIMOS MERCADOPAGO EN NUEVA PESTAÑA
-        window.open(data.init_point, '_blank');
-        
-        // ✅ ESPERAMOS A QUE EL USUARIO VUELVA MANUALMENTE
-        alert("Se abrió Mercado Pago en una nueva pestaña. Cuando termines el pago, vuelve aquí y haz click en 'Verificar Pago'.");
-        
-        setLoading(false);
+        window.location.href = `https://www.mercadopago.com.ar/checkout/v1/redirect?preference-id=${data.id}&lang=es`;
       }
 
     } catch (error) {
-      console.error("Error:", error);
-      alert("Error: " + error.message);
+      console.error("❌ Error completo:", error);
+      setMensaje(`Error: ${error.message}`);
       setLoading(false);
     }
   };
-
-  const verificarPago = () => {
-    // ✅ CUANDO EL USUARIO VUELVE MANUALMENTE
-    const carritoPendiente = localStorage.getItem('carrito_pendiente');
-    
-    if (carritoPendiente) {
-      // Limpiar todo y redirigir a éxito
-      localStorage.removeItem('carrito');
-      localStorage.removeItem('carrito_pendiente');
-      navigate('/success');
-    } else {
-      alert("No hay pagos pendientes por verificar.");
-    }
-  };
-
+  
   if (carrito.length === 0) {
     return (
-      <div className="container my-4">
-        <h2>Carrito Vacío</h2>
-        <button onClick={() => navigate('/tienda')} className="btn btn-primary">
-          Volver a la Tienda
-        </button>
+      <div className="checkout-container">
+        <div className="carrito-vacio">
+          <h2>Carrito Vacío</h2>
+          <p>No hay productos en tu carrito.</p>
+          <button
+            onClick={() => navigate('/')}
+            className="boton-volver"
+          >
+            Volver a la Tienda
+          </button>
+        </div>
       </div>
     );
   }
 
-  const total = carrito.reduce((acc, p) => acc + (p.precio * p.cantidad), 0);
-
   return (
-    <div className="container my-4">
+    <div className="checkout-container">
       <h2>Finalizar Compra</h2>
-      
-      <div className="card p-3 mb-3">
-        <h4>Resumen del Pedido</h4>
-        {carrito.map((item, index) => (
-          <div key={index} className="d-flex justify-content-between">
-            <span>{item.nombre} x{item.cantidad}</span>
-            <span>${item.precio * item.cantidad}</span>
+
+      <div className="checkout-section">
+        <h3>📋 Tus Datos</h3>
+        <input
+          type="text"
+          name="nombre"
+          placeholder="Nombre completo *"
+          value={cliente.nombre}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="email"
+          name="email"
+          placeholder="Correo electrónico *"
+          value={cliente.email}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="tel"
+          name="telefono"
+          placeholder="Teléfono *"
+          value={cliente.telefono}
+          onChange={handleChange}
+          required
+        />
+        <input
+          type="text"
+          name="direccion"
+          placeholder="Dirección *"
+          value={cliente.direccion}
+          onChange={handleChange}
+          required
+        />
+      </div>
+
+      <div className="checkout-section">
+        <h3>🚚 Forma de Envío</h3>
+        <label>
+          <input
+            type="radio"
+            name="envio"
+            value="Envío a domicilio"
+            checked={formaEnvio === "Envío a domicilio"}
+            onChange={(e) => setFormaEnvio(e.target.value)}
+          />
+          Envío a domicilio (+$500)
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="envio"
+            value="Retiro en el local"
+            checked={formaEnvio === "Retiro en el local"}
+            onChange={(e) => setFormaEnvio(e.target.value)}
+          />
+          Retiro en el local (Gratis)
+        </label>
+      </div>
+
+      <div className="checkout-section">
+        <h3>💳 Forma de Pago</h3>
+        <label>
+          <input
+            type="radio"
+            name="pago"
+            value="mercadopago"
+            checked={formaPago === "mercadopago"}
+            onChange={(e) => setFormaPago(e.target.value)}
+          />
+          Mercado Pago (Tarjetas, Efectivo)
+        </label>
+      </div>
+
+      <div className="checkout-section">
+        <h3>🛒 Resumen de tu Pedido</h3>
+        <div className="resumen-productos">
+          {carrito.map((producto, index) => (
+            <div key={index} className="producto-item">
+              <span className="producto-nombre">{producto.nombre}</span>
+              <span className="producto-cantidad">x{producto.cantidad}</span>
+              <span className="producto-precio">${producto.precio * producto.cantidad}</span>
+            </div>
+          ))}
+        </div>
+
+        {formaEnvio === "Envío a domicilio" && (
+          <div className="envio-costo">
+            <span>Costo de envío:</span>
+            <span>+$500</span>
           </div>
-        ))}
-        <hr />
-        <div className="d-flex justify-content-between fw-bold">
+        )}
+
+        <div className="total-final">
           <span>Total:</span>
-          <span>${total}</span>
+          <span>${formaEnvio === "Envío a domicilio" ? total + 500 : total}</span>
         </div>
       </div>
+
+      {mensaje && (
+        <div className={`mensaje ${mensaje.includes('Error') ? 'error' : 'info'}`}>
+          {mensaje}
+        </div>
+      )}
 
       <button
         onClick={handlePagar}
         disabled={loading}
-        className="btn btn-success btn-lg w-100 mb-2"
+        className="boton-pagar"
       >
-        {loading ? "🔄 Procesando..." : "💳 Pagar con Mercado Pago"}
+        {loading ? "🔄 Procesando..." : `💳 Pagar $${formaEnvio === "Envío a domicilio" ? total + 500 : total}`}
       </button>
 
       <button
-        onClick={verificarPago}
-        className="btn btn-primary btn-lg w-100 mb-2"
-      >
-        ✅ Verificar Pago
-      </button>
-
-      <button
-        onClick={() => navigate('/tienda')}
-        className="btn btn-secondary w-100"
+        onClick={() => navigate('/')}
+        className="boton-secundario"
       >
         ← Seguir Comprando
       </button>
-
-      <div className="mt-3 p-3 bg-light rounded">
-        <small>
-          💡 <strong>Instrucciones:</strong><br/>
-          1. Haz click en "Pagar con Mercado Pago"<br/>
-          2. Completa el pago en la nueva pestaña<br/>
-          3. Vuelve a esta pestaña<br/>
-          4. Haz click en "Verificar Pago"<br/>
-        </small>
-      </div>
     </div>
   );
 }

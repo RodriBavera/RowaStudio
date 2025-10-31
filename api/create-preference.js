@@ -34,7 +34,7 @@ export default async function handler(req, res) {
           currency_id: 'ARS',
           unit_price: totalConEnvio,
         }],
-        // ⚠️ NO USAR BACK_URLS - Las manejamos manualmente
+        
         auto_return: "all",
       }),
     });

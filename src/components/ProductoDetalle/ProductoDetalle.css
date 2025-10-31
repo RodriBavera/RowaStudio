@@ -84,7 +84,7 @@
   margin-bottom: 1.5rem;
 }
 
-/* Precio del producto - Mismo color que el botón (#8B6E58) */
+
 .producto-precio {
   color: #8B6E58 !important;
   font-weight: 700;
@@ -93,7 +93,6 @@
   display: block;
 }
 
-/* Botón Agregar al Carrito - Color #8B6E58 (más compacto) */
 .btn-agregar-carrito {
   background-color: #8B6E58 !important;
   color: white !important;

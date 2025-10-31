@@ -1,6 +1,6 @@
 .btnDetalles { 
- background-color: #F3ECE7;
-  color: #333;
+ background-color: #F3ECE7 !important;
+  color: #0f0f0f !important;
   border: 2px solid #F3ECE7;
   padding: 10px 20px;
   border-radius: 8px;
@@ -14,8 +14,8 @@
 }
 
 .btnDetalles:hover {
-  background-color: #8B6E58;
-  color: white !important;
+  background-color: #8B6E58 !important;
+  color: rgb(14, 13, 13) !important;
   border-color: #8B6E58;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(139, 110, 88, 0.3);
@@ -36,7 +36,7 @@
   min-width: 100px;
 }
 
-/* Hover del botón CARRITO - Se convierte en color detalles */
+
 .btnCarrito:hover {
   background-color: #F3ECE7 !important;
   color: #333 !important;
