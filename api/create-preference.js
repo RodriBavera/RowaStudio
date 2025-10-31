@@ -101,4 +101,5 @@ export default async function handler(req, res) {
       details: 'Verifica las variables de entorno en Vercel'
     });
   }
+  
 }

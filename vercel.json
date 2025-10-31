@@ -1,8 +1,8 @@
 {
-  "version": 2,
+  "version": 3,
   "builds": [
     {
-      "src": "package.json",
+      "src": "vite.config.js",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist"
@@ -10,42 +10,6 @@
     }
   ],
   "routes": [
-    {
-      "src": "/success",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/success/.*",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/failure",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/failure/.*", 
-      "dest": "/index.html"
-    },
-    {
-      "src": "/pending",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/pending/.*",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/tienda",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/carrito",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/checkout",
-      "dest": "/index.html"
-    },
     {
       "src": "/(.*)",
       "dest": "/index.html"
