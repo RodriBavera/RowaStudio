@@ -1,4 +1,3 @@
-
 export default async function handler(req, res) {
   // Configurar CORS
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -40,6 +39,13 @@ export default async function handler(req, res) {
 
     console.log('🔑 Token MP encontrado');
 
+    // OBTENER LA URL BASE DINÁMICAMENTE
+    const baseUrl = req.headers.origin || 
+                   process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 
+                   'http://localhost:3000';
+
+    console.log('🌐 URL Base:', baseUrl);
+
     // Crear preferencia usando fetch a la API de Mercado Pago
     const mpResponse = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
@@ -59,9 +65,9 @@ export default async function handler(req, res) {
           }
         ],
         back_urls: {
-          success: `https://${process.env.VERCEL_URL}/success`,
-          failure: `https://${process.env.VERCEL_URL}/failure`,
-          pending: `https://${process.env.VERCEL_URL}/pending`,
+          success: `${baseUrl}/success`,
+          failure: `${baseUrl}/failure`,
+          pending: `${baseUrl}/pending`,
         },
         auto_return: 'approved',
         statement_descriptor: 'ROWASTUDIO'
@@ -77,6 +83,8 @@ export default async function handler(req, res) {
     const mpData = await mpResponse.json();
     
     console.log('✅ Preferencia creada exitosamente:', mpData.id);
+    console.log('🔗 Init Point:', mpData.init_point);
+    console.log('🔄 URLs de retorno configuradas para:', baseUrl);
 
     return res.status(200).json({
       success: true,

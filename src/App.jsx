@@ -25,7 +25,11 @@ const App = () => {
         <Route path="/carrito" element={<Carrito />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/success" element={<Success />} />
+        <Route path="/success/:params*" element={<Success />} />
         <Route path="/failure" element={<Failure />} />
+        <Route path="/failure/:params*" element={<Failure />} />
+        <Route path="/pending" element={<Success />} />
+        <Route path="/pending/:params*" element={<Success />} />
       </Routes>
       <Footer />
     </>

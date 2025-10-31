@@ -58,53 +58,47 @@ export default function Checkout() {
     setMensaje("");
     setLoading(true);
 
-    try {
-      console.log("🔄 Iniciando proceso de pago...");
+   try {
+    console.log("🔄 Iniciando proceso de pago...");
 
-      const res = await fetch("/api/create-preference", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          carrito,
-          cliente,
-          envio: formaEnvio,
-          formaPago: "mercadopago"
-        }),
-      });
+    const res = await fetch("/api/create-preference", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        carrito,
+        cliente,
+        envio: formaEnvio,
+        formaPago: "mercadopago"
+        // La API ahora detecta automáticamente la URL base
+      }),
+    });
 
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(`Error ${res.status}: ${errorText}`);
-      }
-
-      const data = await res.json();
-      console.log("✅ Preferencia creada:", data);
-
-      if (data.id) {
-        console.log("🎯 Redirigiendo a Mercado Pago...");
-        
-        // GUARDA EL CARRITO TEMPORALMENTE PARA SUCCESS/FALLURE
-        localStorage.setItem('carrito_pendiente', JSON.stringify(carrito));
-        
-        // Redirige a MercadoPago - esto abre en nueva ventana/pestaña
-        window.open(
-          `https://www.mercadopago.com.ar/checkout/v1/redirect?preference-id=${data.id}&lang=es`,
-          '_blank'
-        );
-        
-        // Opcional: muestra mensaje de que se abrió MercadoPago
-        setMensaje("Se abrió Mercado Pago en una nueva ventana. Completa el pago allí.");
-        setLoading(false);
-      }
-
-    } catch (error) {
-      console.error("❌ Error completo:", error);
-      setMensaje(`Error: ${error.message}`);
-      setLoading(false);
+    if (!res.ok) {
+      const errorText = await res.text();
+      throw new Error(`Error ${res.status}: ${errorText}`);
     }
-  };
 
-  // Resto de tu componente igual...
+    const data = await res.json();
+    console.log("✅ Preferencia creada:", data);
+
+    if (data.init_point) {
+      console.log("🎯 Redirigiendo a Mercado Pago...");
+      
+      // Guardar carrito temporal
+      localStorage.setItem('carrito_pendiente', JSON.stringify(carrito));
+      
+      // Redirigir usando el init_point de MercadoPago
+      window.location.href = data.init_point;
+    }
+
+  } catch (error) {
+    console.error("❌ Error completo:", error);
+    setMensaje(`Error: ${error.message}`);
+    setLoading(false);
+  }
+};
+
+  
   if (carrito.length === 0) {
     return (
       <div className="checkout-container">
